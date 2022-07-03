@@ -22,7 +22,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint --ext 'src/**/*.{js,jsx,ts,tsx}'",
-    "format": "eslint --cache --fix 'src/**/*.{js,jsx,ts,tsx}' && prettier --write 'src/**/*.{js,jsx,ts,tsx}'"
+    "format": "eslint --cache --fix 'src/**/*.{js,jsx,ts,tsx}' && prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
+    "prepare": "husky install",
+    "lint-staged":"lint-staged"
   },
   "eslintConfig": {
     "extends": [
@@ -60,8 +62,8 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
-      "lint",
-      "format"
+      "npm run lint",
+      "npm run format"
     ]
   }
 }
