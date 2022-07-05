@@ -1,15 +1,31 @@
 {
-  "extends": ["airbnb-typescript", "next", "next/core-web-vitals", "prettier"],
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "plugins": ["jest"],
   "env": {
-    "browser": true,
-    "node": true,
-    "es6": true,
-    "jest/globals": true
+      "browser": true,
+      "es2021": true
   },
+  "extends": [
+    "react-app",
+    "react-app/jest",
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "ecmaFeatures": {
+          "jsx": true
+      },
+      "ecmaVersion": 12,
+      "sourceType": "module"
+  },
+  "plugins": [
+      "react",
+      "@typescript-eslint"
+  ],
   "rules": {
     "import/prefer-default-export": "off",
     "import/extensions": "off",
@@ -17,7 +33,6 @@
     "react/require-default-props": "off",
     "react/prop-types": "off",
     "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }],
-    "jest/prefer-expect-assertions": ["warn", { "onlyFunctionsWithAsyncKeyword": true }],
     "max-depth": "error",
     "no-param-reassign": 0,
     "react/jsx-props-no-spreading": ["error", { "custom": "ignore" }],
@@ -29,24 +44,5 @@
     ],
     "import/no-named-as-default": 0,
     "import/newline-after-import": 0
-  },
-
-  "overrides": [
-    {
-      "files": ["**/*.d.ts"],
-      "rules": {
-        "import/export": "off"
-      }
-    },
-    {
-      "files": ["src/lib/graphql/index.ts"],
-      "rules": {
-        "max-lines": "off"
-      }
-    }
-  ],
-
-  "settings": {
-    "import/ignore": [".css$"]
   }
 }
