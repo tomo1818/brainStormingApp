@@ -29,6 +29,17 @@
   "rules": {
     "import/prefer-default-export": "off",
     "import/extensions": "off",
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx"
+        ]
+      }
+    ],
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": "off",
     "react/prop-types": "off",
