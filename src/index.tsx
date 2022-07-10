@@ -7,18 +7,15 @@ import reportWebVitals from './reportWebVitals';
 import MindMap from './pages/MindMap';
 import TestPage from './pages/TestPage';
 
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <ChakraProvider>
       <React.StrictMode>
-
-          <Routes>
-            <Route path="/" element={<MindMap/>} />
-            <Route path="/test" element={<TestPage/>} />
-          </Routes>
-
+        <Routes>
+          <Route path="/" element={<MindMap />} />
+          <Route path="/test" element={<TestPage />} />
+        </Routes>
       </React.StrictMode>
     </ChakraProvider>
   </BrowserRouter>,
