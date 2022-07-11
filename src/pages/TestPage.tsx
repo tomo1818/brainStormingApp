@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Box, Input, Stack, HStack } from '@chakra-ui/react';
 import { RecursiveTree } from '../components/RecursiveTree';
-import { Node, addListType, deleteListType } from '../types/node';
+import { Node } from '../types/node';
+import { AddListType } from '../types/addListType';
+import { DeleteListType } from '../types/deleteListType';
 
 function TestPage() {
   const [list, setList] = useState<Node[]>([
@@ -58,8 +60,7 @@ function TestPage() {
 
   const findUniqueId = (data: Node[]) => {
     let maxId = 0;
-    // eslint-disable-next-line array-callback-return
-    data.map((item:Node) => {
+    data.forEach((item: Node) => {
       if (item.id > maxId) {
         maxId = item.id;
       }
@@ -67,7 +68,12 @@ function TestPage() {
     return maxId + 1;
   };
 
-  const addList: addListType = (text:string, color:string, size:string, parentId:number):void => {
+  const addList: AddListType = (
+    text: string,
+    color: string,
+    size: string,
+    parentId: number,
+  ): void => {
     const newId = findUniqueId(list);
     const newNodeData = {
       id: newId,
@@ -81,9 +87,18 @@ function TestPage() {
     setList(copyArray);
   };
 
-  const deleteList: deleteListType = (id:number, parentId:number) => {
-    console.log('deleteList');
+  const deleteList: DeleteListType = (id: number, parentId: number) => {
     const copyArray = list.slice();
+    const newArray = copyArray.map((item, index) => {
+      if (item.parentId === id) {
+        item.parentId = parentId;
+      }
+      if (item.id === id) {
+        item.parentId = 999;
+      }
+      return item;
+    });
+    setList(newArray);
   };
 
   return (

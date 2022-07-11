@@ -1,16 +1,30 @@
 import React from 'react';
-import { Box, Input, Stack, HStack, VStack, Editable, EditableInput, EditableTextarea, EditablePreview, IconButton } from '@chakra-ui/react';
+import { Box,
+  Input,
+  Stack,
+  HStack,
+  VStack,
+  Editable,
+  EditableInput,
+  EditableTextarea,
+  EditablePreview,
+  IconButton } from '@chakra-ui/react';
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
-import { Node, addListType, deleteListType } from '../types/node';
+import { Node } from '../types/node';
+import { AddListType } from '../types/addListType';
+import { DeleteListType } from '../types/deleteListType';
 
-export function NodeUI({ item, addList, deleteList }:
-  {item: Node, addList: addListType, deleteList: deleteListType}) {
+type Props = {
+  item: Node;
+  addList: AddListType;
+  deleteList: DeleteListType;
+};
+
+export function NodeUI({ item, addList, deleteList }: Props) {
   const clickAddButton = () => {
     addList('addSample', '', '', item.id);
   };
   const clickDeleteButton = () => {
-    console.log(item.id);
-    console.log(item.parentId);
     deleteList(item.id, item.parentId);
   };
 
