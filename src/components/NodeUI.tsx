@@ -1,14 +1,5 @@
 import React from 'react';
-import { Box,
-  Input,
-  Stack,
-  HStack,
-  VStack,
-  Editable,
-  EditableInput,
-  EditableTextarea,
-  EditablePreview,
-  IconButton } from '@chakra-ui/react';
+import { Box, Editable, EditableInput, EditableTextarea, EditablePreview, IconButton } from '@chakra-ui/react';
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { Node } from '../types/node';
 import { AddListType } from '../types/addListType';
