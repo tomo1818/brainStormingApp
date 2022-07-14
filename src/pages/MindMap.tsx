@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Box, Input, Stack, HStack,
-} from '@chakra-ui/react';
+import { Box, Input, Stack, HStack } from '@chakra-ui/react';
 
 function MindMap() {
   return (
