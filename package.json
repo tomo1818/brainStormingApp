@@ -69,6 +69,8 @@
   },
   "lint-staged": {
     "*.{ts,tsx}": [
+      "lint",
+      "format"
     ]
   }
 }
