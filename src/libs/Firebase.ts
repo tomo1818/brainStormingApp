@@ -1,17 +1,13 @@
-import firebase from 'firebase/app';
-import 'firebase/analytics';
+import { initializeApp } from 'firebase/app';
 
 const config = {
-  apiKey: process.env.REACT_APP_APP_KEY,
-  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_DATABASE_URL,
-  projectId: process.env.REACT_APP_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_STORAGEBUCKET,
-  messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_APP_ID,
-  measurementId: process.env.REACT_APP_MEASUREMENT_ID,
+  apiKey: 'AIzaSyAjCDf6BmUNofWEN85N4mWdXVDgbYIa6Bw',
+  authDomain: 'brainstormingapp-87dbe.firebaseapp.com',
+  projectId: 'brainstormingapp-87dbe',
+  storageBucket: 'brainstormingapp-87dbe.appspot.com',
+  messagingSenderId: '270398829516',
+  appId: '1:270398829516:web:00d265b862f4cc9bf26369',
+  measurementId: 'G-2S1G2DC4B5',
 };
 
-firebase.initializeApp(config);
-
-export default firebase;
+export const app = initializeApp(config);

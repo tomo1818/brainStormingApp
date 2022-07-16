@@ -6,6 +6,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import reportWebVitals from './reportWebVitals';
 import MindMap from './pages/MindMap';
 import TestPage from './pages/TestPage';
+import Signup from './pages/Signup';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,6 +16,7 @@ root.render(
         <Routes>
           <Route path="/" element={<MindMap />} />
           <Route path="/test" element={<TestPage />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </React.StrictMode>
     </ChakraProvider>
