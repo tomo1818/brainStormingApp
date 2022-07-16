@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, Editable, EditableInput, EditableTextarea, EditablePreview, IconButton } from '@chakra-ui/react';
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
-import Draggable from 'react-draggable';
+import Draggable, { DraggableEvent } from 'react-draggable';
 import { Node } from '../types/node';
 import { AddListType } from '../types/addListType';
 import { DeleteListType } from '../types/deleteListType';
@@ -12,6 +12,18 @@ type Props = {
   deleteList: DeleteListType;
 };
 
+type Position = {
+  xRate: number;
+  yRate: number;
+}
+type DraggableData = {
+  node: HTMLElement,
+  x: number, y: number,
+  deltaX: number, deltaY: number,
+  lastX: number, lastY: number
+};
+type DraggableEventHandler = (e: Event, data: DraggableData) => void | false;
+
 export function NodeUI({ item, addList, deleteList }: Props) {
   const clickAddButton = () => {
     addList('addSample', '', '', item.id);
@@ -20,11 +32,33 @@ export function NodeUI({ item, addList, deleteList }: Props) {
     deleteList(item.id, item.parentId);
   };
 
+  const [currentPosition, setCurrentPosition] = useState<Position>({
+    xRate: 150,
+    yRate: 150,
+  });
+
+  const onDrag = (e: DraggableEvent, data: DraggableData) => {
+    setCurrentPosition({
+      xRate: data.lastX, yRate: data.lastY,
+    });
+  };
+
   return (
-    <Draggable>
+    <Draggable
+      position={{
+        x: currentPosition.xRate, y: currentPosition.yRate,
+      }}
+      onDrag={onDrag}
+    >
       <Box borderRadius="full" borderWidth="1px" p={4} m={0} color="black">
         <span>
           {item.id}
+        </span>
+        <span>
+          x:
+          {currentPosition.xRate}
+          y:
+          {currentPosition.yRate}
         </span>
         {item.text}
         <Editable defaultValue="Take some chakra">
