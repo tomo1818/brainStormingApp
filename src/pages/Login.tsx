@@ -10,11 +10,11 @@ import {
   Stack,
   Text,
 } from '@chakra-ui/react';
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
 import { app } from '../libs/Firebase';
 
-function Signup() {
+function Login() {
   const [email, setEmail] = useState('');
   const [isEmailError, setIsEmailError] = useState(false);
   const [password, setPassword] = useState('');
@@ -41,13 +41,21 @@ function Signup() {
     const emailError = handleEmailValidation(email);
     const passwordError = handlePasswordValidation(password);
     if (!emailError && !passwordError) {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await signInWithEmailAndPassword(auth, email, password)
+        .then((user) => {
+          console.log('ログイン成功', user);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
   return (
     <Stack maxWidth="900px" m="0 auto" p="5">
-      <Text fontWeight="bold" size="lg">ユーザー登録</Text>
+      <Text fontWeight="bold" size="lg">
+        ログイン
+      </Text>
       <form>
         <FormControl isInvalid={isEmailError}>
           <FormLabel>メールアドレス</FormLabel>
@@ -77,11 +85,11 @@ function Signup() {
           )}
         </FormControl>
         <Button size="md" mt={4} colorScheme="teal" onClick={handleSubmit}>
-          登録
+          ログイン
         </Button>
       </form>
     </Stack>
   );
 }
 
-export default Signup;
+export default Login;

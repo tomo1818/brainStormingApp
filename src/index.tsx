@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import MindMap from './pages/MindMap';
 import TestPage from './pages/TestPage';
 import Signup from './pages/Signup';
+import Login from './pages/Login';
+import MyPage from './pages/MyPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -17,6 +19,8 @@ root.render(
           <Route path="/" element={<MindMap />} />
           <Route path="/test" element={<TestPage />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/mypage" element={<MyPage />} />
         </Routes>
       </React.StrictMode>
     </ChakraProvider>
