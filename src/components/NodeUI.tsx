@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Box, Editable, EditableInput, EditableTextarea, EditablePreview, IconButton } from '@chakra-ui/react';
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import Draggable, { DraggableEvent } from 'react-draggable';
 import { Node } from '../types/node';
 import { AddListType } from '../types/addListType';
 import { DeleteListType } from '../types/deleteListType';
+import { UpdateListType } from '../types/updateListType';
 
 type Props = {
   item: Node;
   addList: AddListType;
   deleteList: DeleteListType;
+  updateList: UpdateListType;
 };
 
 type Position = {
@@ -22,26 +24,30 @@ type DraggableData = {
   deltaX: number, deltaY: number,
   lastX: number, lastY: number
 };
+
 type DraggableEventHandler = (e: Event, data: DraggableData) => void | false;
 
-export function NodeUI({ item, addList, deleteList }: Props) {
+export function NodeUI({ item, addList, deleteList, updateList }: Props) {
   const clickAddButton = () => {
-    addList('addSample', '', '', item.id);
+    addList('addSample', '', '', item.id, item.x + 100, item.y + 100);
   };
   const clickDeleteButton = () => {
     deleteList(item.id, item.parentId);
   };
 
   const [currentPosition, setCurrentPosition] = useState<Position>({
-    xRate: 150,
-    yRate: 150,
+    xRate: item.x,
+    yRate: item.y,
   });
 
   const onDrag = (e: DraggableEvent, data: DraggableData) => {
     setCurrentPosition({
       xRate: data.lastX, yRate: data.lastY,
     });
+    updateList(item.id, item.text, item.color, item.size, item.parentId, data.lastX, data.lastY);
   };
+
+  const NodeRef = useRef<HTMLDivElement>(null);
 
   return (
     <Draggable
@@ -50,33 +56,35 @@ export function NodeUI({ item, addList, deleteList }: Props) {
       }}
       onDrag={onDrag}
     >
-      <Box borderRadius="full" borderWidth="1px" p={4} m={0} color="black">
-        <span>
-          {item.id}
-        </span>
-        <span>
-          x:
-          {currentPosition.xRate}
-          y:
-          {currentPosition.yRate}
-        </span>
-        {item.text}
-        <Editable defaultValue="Take some chakra">
-          <EditablePreview />
-          <EditableInput />
-        </Editable>
-        <IconButton
-          borderRadius="full"
-          aria-label="Search database"
-          icon={<AddIcon />}
-          onClick={clickAddButton}
-        />
-        <IconButton
-          borderRadius="full"
-          aria-label="Search database"
-          icon={<CloseIcon />}
-          onClick={clickDeleteButton}
-        />
+      <Box borderRadius="full" position="absolute" borderWidth="1px" p={0} m={0} color="black">
+        <div ref={NodeRef}>
+          <span>
+            {item.id}
+          </span>
+          <span>
+            x:
+            {currentPosition.xRate}
+            y:
+            {currentPosition.yRate}
+          </span>
+          {item.text}
+          <Editable defaultValue="Take some chakra">
+            <EditablePreview />
+            <EditableInput />
+          </Editable>
+          <IconButton
+            borderRadius="full"
+            aria-label="Search database"
+            icon={<AddIcon />}
+            onClick={clickAddButton}
+          />
+          <IconButton
+            borderRadius="full"
+            aria-label="Search database"
+            icon={<CloseIcon />}
+            onClick={clickDeleteButton}
+          />
+        </div>
       </Box>
     </Draggable>
   );
