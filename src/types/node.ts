@@ -4,4 +4,6 @@ export type Node = {
   color: string;
   size: string;
   parentId: number;
+  x :number;
+  y :number;
 };

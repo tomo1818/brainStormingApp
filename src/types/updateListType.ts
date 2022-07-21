@@ -1,4 +1,5 @@
-export type AddListType = (
+export type UpdateListType = (
+  id: number,
   text: string,
   color: string,
   size: string,
