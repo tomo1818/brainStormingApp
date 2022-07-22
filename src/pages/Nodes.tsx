@@ -13,7 +13,7 @@ import Loading from '../components/Loading';
 
 function Nodes() {
   const { user } = useContext(UserContext);
-  const [nodes, setNodes] = useState<Node[]>([]);
+  const [nodes, setNodes] = useState<Node[]>();
   const [loading, setLoading] = useState(true);
   const updateNodes = async (data: Node[]) => {
     setNodes(data);
@@ -62,15 +62,18 @@ function Nodes() {
 
   const deleteList: DeleteListType = (id: number, parentId: number) => {
     const copyArray = nodes.slice();
-    const newArray = copyArray.map((item) => {
-      if (item.parentId === id) {
-        item.parentId = parentId;
-      }
-      if (item.id === id) {
-        item.parentId = 999;
-      }
-      return item;
-    });
+    const updateArray = copyArray.map((item) => (item.parentId === id ? ({
+      id: item.id,
+      text: item.text,
+      color: item.color,
+      size: item.size,
+      parentId,
+      x: item.x,
+      y: item.y,
+    }) : (
+      item
+    )));
+    const newArray = updateArray.filter((item) => item.id !== id);
     updateNodes(newArray);
   };
 
@@ -105,7 +108,7 @@ function Nodes() {
     }
   }, [user]);
 
-  if (loading) {
+  if (loading || !nodes) {
     return <Loading />;
   }
 
