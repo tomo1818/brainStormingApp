@@ -9,7 +9,7 @@ import {
   Stack,
 } from '@chakra-ui/react';
 
-function MindMap() {
+function Home() {
   return (
     <Box className="App" backgroundImage="url('/home-bg.jpg')" h="calc(100vh - 60px)">
       <Container maxW="3xl">
@@ -50,13 +50,13 @@ function MindMap() {
               _hover={{
                 bg: 'green.500',
               }}
-              href="/test"
+              href="/room"
             >
               Get Started
             </Button>
             <Button
               as="a"
-              href="/signup"
+              href="/login"
               variant="link"
               colorScheme="blue"
               size="sm"
@@ -70,4 +70,4 @@ function MindMap() {
   );
 }
 
-export default MindMap;
+export default Home;

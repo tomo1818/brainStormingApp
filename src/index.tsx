@@ -4,7 +4,7 @@ import './index.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import reportWebVitals from './reportWebVitals';
-import MindMap from './pages/MindMap';
+import Home from './pages/MindMap';
 import Nodes from './pages/Nodes';
 import TestPage from './pages/TestPage';
 import Signup from './pages/Signup';
@@ -24,7 +24,7 @@ root.render(
             <Box h="calc(100vh)">
               <Header />
               <Routes>
-                <Route path="/" element={<MindMap />} />
+                <Route path="/" element={<Home />} />
                 <Route path="/test" element={<TestPage />} />
                 <Route path="/room" element={<Nodes />} />
                 <Route path="/signup" element={<Signup />} />
