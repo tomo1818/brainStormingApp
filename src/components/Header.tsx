@@ -17,7 +17,7 @@ import {
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { getAuth, signOut } from 'firebase/auth';
 import { useContext } from 'react';
-import { Link as LinkButton } from 'react-router-dom';
+import { Link as LinkButton, useNavigate } from 'react-router-dom';
 import { app } from '../libs/Firebase';
 import { AuthContext } from '../context/AuthContext';
 
@@ -131,11 +131,13 @@ function DesktopNav() {
 function Header() {
   const { isOpen, onToggle } = useDisclosure();
   const { currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
   const auth = getAuth(app);
   const handleSignOut = () => {
     signOut(auth)
       .then(() => {
         // Sign-out successful.
+        navigate('/');
       })
       .catch((error) => {
         // An error happened.
