@@ -4,7 +4,7 @@ import './index.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import reportWebVitals from './reportWebVitals';
-import Home from './pages/MindMap';
+import Home from './pages/Home';
 import Nodes from './pages/Nodes';
 import TestPage from './pages/TestPage';
 import Signup from './pages/Signup';
