@@ -29,7 +29,7 @@ const NAV_ITEMS: Array<NavItem> = [
   },
   {
     label: 'Room',
-    href: '/test',
+    href: '/room',
   },
 ];
 
