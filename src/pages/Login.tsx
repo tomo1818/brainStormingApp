@@ -46,7 +46,7 @@ function Login() {
     if (!emailError && !passwordError) {
       await signInWithEmailAndPassword(auth, email, password)
         .then((user) => {
-          navigate('/mypage');
+          navigate('/room');
         });
     }
   };

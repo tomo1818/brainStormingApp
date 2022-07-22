@@ -19,7 +19,6 @@ import { app, db } from '../libs/Firebase';
 import { AuthContext } from '../context/AuthContext';
 
 function Signup() {
-  const { currentUser } = useContext(AuthContext);
   const [name, setName] = useState('');
   const [isNameError, setIsNameError] = useState(false);
   const [email, setEmail] = useState('');
@@ -72,8 +71,7 @@ function Signup() {
         .then((userCredential) => {
           // Signed in
           createUser(userCredential.user.uid);
-          navigate('/test');
-          // Router.push('/myPage');
+          navigate('/room');
           // ...
         })
         .catch((error) => {
