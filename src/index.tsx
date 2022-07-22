@@ -9,12 +9,14 @@ import TestPage from './pages/TestPage';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import MyPage from './pages/MyPage';
+import Header from './components/Header';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
     <ChakraProvider>
       <React.StrictMode>
+        <Header />
         <Routes>
           <Route path="/" element={<MindMap />} />
           <Route path="/test" element={<TestPage />} />

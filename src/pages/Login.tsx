@@ -12,6 +12,7 @@ import {
 } from '@chakra-ui/react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { app } from '../libs/Firebase';
 
 function Login() {
@@ -37,16 +38,15 @@ function Login() {
     return error;
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async () => {
     const emailError = handleEmailValidation(email);
     const passwordError = handlePasswordValidation(password);
     if (!emailError && !passwordError) {
       await signInWithEmailAndPassword(auth, email, password)
         .then((user) => {
-          console.log('ログイン成功', user);
-        })
-        .catch((error) => {
-          console.error(error);
+          navigate('/mypage');
         });
     }
   };

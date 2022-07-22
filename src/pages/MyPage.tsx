@@ -9,7 +9,7 @@ function MyPage() {
   const auth = getAuth(app);
   useEffect(() => {
     onAuthStateChanged(auth, (currentUser: User) => setUser(currentUser));
-  }, []);
+  }, [auth]);
   return (
     <Stack maxWidth="900px" m="0 auto" p="5">
       <Text fontWeight="bold" size="lg">
