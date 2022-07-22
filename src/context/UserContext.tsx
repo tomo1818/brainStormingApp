@@ -2,7 +2,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable react/jsx-no-constructed-context-values */
-import { Box } from '@chakra-ui/react';
+import { Box, useToast } from '@chakra-ui/react';
 import { doc, getDoc } from '@firebase/firestore';
 import {
   createContext,
@@ -42,6 +42,8 @@ function UserProvider(props: any) {
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
   const location = useLocation();
+  const toast = useToast();
+  const toastId = 'login-alert';
 
   const getUser = async (id: string) => {
     const docRef = doc(db, 'users', id);
@@ -53,7 +55,19 @@ function UserProvider(props: any) {
   useEffect(() => {
     if (!currentUser) {
       setLoading(false);
-      if (location.pathname !== '/login' && location.pathname !== '/signup') navigate('/');
+      if (location.pathname !== '/' && location.pathname !== '/login' && location.pathname !== '/signup') {
+        navigate('/');
+        if (!toast.isActive(toastId)) {
+          toast({
+            id: toastId,
+            title: 'ログインされていません',
+            description: 'ログインまたはサインアップをお願いします。',
+            status: 'success',
+            duration: 9000,
+            isClosable: true,
+          });
+        }
+      }
     } else {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
       getUser(currentUser.uid);

@@ -1,4 +1,6 @@
-import { Box,
+/* eslint-disable object-curly-newline */
+import {
+  Box,
   Flex,
   Text,
   IconButton,
@@ -10,10 +12,12 @@ import { Box,
   PopoverTrigger,
   useColorModeValue,
   useBreakpointValue,
-  useDisclosure } from '@chakra-ui/react';
+  useDisclosure,
+} from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { getAuth, signOut } from 'firebase/auth';
 import { useContext } from 'react';
+import { Link as LinkButton } from 'react-router-dom';
 import { app } from '../libs/Firebase';
 import { AuthContext } from '../context/AuthContext';
 
@@ -103,8 +107,9 @@ function DesktopNav() {
           <Popover trigger="hover" placement="bottom-start">
             <PopoverTrigger>
               <Link
+                as={LinkButton}
+                to={navItem.href}
                 p={2}
-                href={navItem.href ?? '#'}
                 fontSize="sm"
                 fontWeight={500}
                 color={linkColor}
@@ -123,7 +128,7 @@ function DesktopNav() {
   );
 }
 
-export default function WithSubnavigation() {
+function Header() {
   const { isOpen, onToggle } = useDisclosure();
   const { currentUser } = useContext(AuthContext);
   const auth = getAuth(app);
@@ -218,34 +223,20 @@ export default function WithSubnavigation() {
         >
           {currentUser ? (
             <Button
-              as="a"
               fontSize="sm"
               fontWeight={400}
               variant="link"
-              href="/"
               onClick={handleSignOut}
             >
               Logout
             </Button>
           ) : (
             <>
-              <Button
-                as="a"
-                fontSize="sm"
-                fontWeight={400}
-                variant="link"
-                href="/login"
-              >
-                Login
+              <Button fontSize="sm" fontWeight={400} variant="link">
+                <LinkButton to="login">Login</LinkButton>
               </Button>
-              <Button
-                as="a"
-                fontSize="sm"
-                fontWeight={400}
-                variant="link"
-                href="/signup"
-              >
-                Sign Up
+              <Button fontSize="sm" fontWeight={400} variant="link">
+                <LinkButton to="signup">Sign Up</LinkButton>
               </Button>
             </>
           )}
@@ -258,3 +249,5 @@ export default function WithSubnavigation() {
     </Box>
   );
 }
+
+export default Header;
