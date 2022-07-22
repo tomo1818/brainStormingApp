@@ -40,11 +40,31 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
     yRate: item.y,
   });
 
-  const onDrag = (e: DraggableEvent, data: DraggableData) => {
+  // データの更新が増えすぎるのでドロップ時に実行する方が良い
+  // ドラッグ時の移動が遅くなっていたのはこの処理が重すぎたからだと思います。
+  // const onDrag = (e: DraggableEvent, data: DraggableData) => {
+  //   setCurrentPosition({
+  //     xRate: data.lastX, yRate: data.lastY,
+  //   });
+  // };
+
+  // ドロップ時に更新を行うことで処理を軽くする
+  const onDrop = (e: DraggableEvent, data: DraggableData) => {
+    // ローカルでの更新
     setCurrentPosition({
-      xRate: data.lastX, yRate: data.lastY,
+      xRate: data.x,
+      yRate: data.y,
     });
-    updateList(item.id, item.text, item.color, item.size, item.parentId, data.lastX, data.lastY);
+    // データベースでの更新
+    updateList(
+      item.id,
+      item.text,
+      item.color,
+      item.size,
+      item.parentId,
+      data.x,
+      data.y,
+    );
   };
 
   const NodeRef = useRef<HTMLDivElement>(null);
@@ -52,15 +72,21 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
   return (
     <Draggable
       position={{
-        x: currentPosition.xRate, y: currentPosition.yRate,
+        x: currentPosition.xRate,
+        y: currentPosition.yRate,
       }}
-      onDrag={onDrag}
+      onStop={onDrop}
     >
-      <Box borderRadius="full" position="absolute" borderWidth="1px" p={0} m={0} color="black">
+      <Box
+        borderRadius="full"
+        position="absolute"
+        borderWidth="1px"
+        p={0}
+        m={0}
+        color="black"
+      >
         <div ref={NodeRef}>
-          <span>
-            {item.id}
-          </span>
+          <span>{item.id}</span>
           <span>
             x:
             {currentPosition.xRate}
