@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Box, ChakraProvider } from '@chakra-ui/react';
 import reportWebVitals from './reportWebVitals';
 import MindMap from './pages/MindMap';
+import Nodes from './pages/Nodes';
 import TestPage from './pages/TestPage';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
@@ -25,6 +26,7 @@ root.render(
               <Routes>
                 <Route path="/" element={<MindMap />} />
                 <Route path="/test" element={<TestPage />} />
+                <Route path="/room" element={<Nodes />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/mypage" element={<MyPage />} />

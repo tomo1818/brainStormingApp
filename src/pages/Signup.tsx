@@ -13,20 +13,31 @@ import {
 } from '@chakra-ui/react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { doc, setDoc } from 'firebase/firestore';
 import { app, db } from '../libs/Firebase';
 import { AuthContext } from '../context/AuthContext';
 
 function Signup() {
   const { currentUser } = useContext(AuthContext);
+  const [name, setName] = useState('');
+  const [isNameError, setIsNameError] = useState(false);
   const [email, setEmail] = useState('');
   const [isEmailError, setIsEmailError] = useState(false);
   const [password, setPassword] = useState('');
   const [isPasswordError, setIsPasswordError] = useState(false);
+  const navigate = useNavigate();
 
   const auth = getAuth(app);
+  const handleNameChange = (value: string) => setName(value);
   const handleEmailChange = (value: string) => setEmail(value);
   const handlePasswordChange = (value: string) => setPassword(value);
+
+  const handleNameValidation = (value: string): boolean => {
+    const error = value.length === 0 || value.length > 10;
+    setIsNameError(error);
+    return error;
+  };
 
   const handleEmailValidation = (value: string): boolean => {
     const regex = /^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
@@ -44,7 +55,7 @@ function Signup() {
   const createUser = async (id: string) => {
     const data = {
       id,
-      name: 'name',
+      name,
       email,
       password,
       nodes: [],
@@ -53,13 +64,15 @@ function Signup() {
   };
 
   const handleSubmit = async () => {
+    const nameError = handleNameValidation(name);
     const emailError = handleEmailValidation(email);
     const passwordError = handlePasswordValidation(password);
-    if (!emailError && !passwordError) {
+    if (!nameError && !emailError && !passwordError) {
       await createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed in
           createUser(userCredential.user.uid);
+          navigate('/test');
           // Router.push('/myPage');
           // ...
         })
@@ -78,6 +91,19 @@ function Signup() {
         ユーザー登録
       </Text>
       <form>
+        <FormControl isInvalid={isNameError}>
+          <FormLabel>氏名</FormLabel>
+          <Input
+            id="name"
+            value={name}
+            onChange={(e) => handleNameChange(e.target.value)}
+          />
+          {isNameError && (
+            <FormErrorMessage>
+              氏名は1文字以上、10文字以下で入力してください
+            </FormErrorMessage>
+          )}
+        </FormControl>
         <FormControl isInvalid={isEmailError}>
           <FormLabel>メールアドレス</FormLabel>
           <Input
@@ -101,7 +127,7 @@ function Signup() {
           />
           {isPasswordError && (
             <FormErrorMessage>
-              パスワードは8文字以上10文字以内で入力してください。
+              パスワードは8文字以上、10文字以下で入力してください。
             </FormErrorMessage>
           )}
         </FormControl>

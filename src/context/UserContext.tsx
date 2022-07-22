@@ -2,7 +2,7 @@
 /* eslint-disable react/destructuring-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable react/jsx-no-constructed-context-values */
-import { Spinner } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import { doc, getDoc } from '@firebase/firestore';
 import {
   createContext,
@@ -11,6 +11,7 @@ import {
   useState,
 } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import Loading from '../components/Loading';
 import { db } from '../libs/Firebase';
 import { Node } from '../types/node';
 import { AuthContext } from './AuthContext';
@@ -26,8 +27,6 @@ type User = {
 interface IUserContext {
   user: User | undefined;
   setUser: (value: User) => void;
-  // nodes: Node[];
-  // setNodes: (value: Node[]) => void;
 }
 
 const UserContext = createContext<IUserContext>({
@@ -63,7 +62,12 @@ function UserProvider(props: any) {
   }, [currentUser, location.pathname, navigate]);
 
   if (loading) {
-    return <Spinner />;
+    return (
+      <>
+        <Box h="60px" />
+        <Loading />
+      </>
+    );
   }
 
   return (
