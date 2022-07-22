@@ -1,3 +1,4 @@
+import { getFirestore } from '@firebase/firestore';
 import { initializeApp } from 'firebase/app';
 
 const config = {
@@ -11,3 +12,4 @@ const config = {
 };
 
 export const app = initializeApp(config);
+export const db = getFirestore(app);

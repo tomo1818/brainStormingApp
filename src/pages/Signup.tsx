@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable object-curly-newline */
 /* eslint-disable comma-dangle */
@@ -11,10 +12,13 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
-import { useState } from 'react';
-import { app } from '../libs/Firebase';
+import { useState, useContext } from 'react';
+import { doc, setDoc } from 'firebase/firestore';
+import { app, db } from '../libs/Firebase';
+import { AuthContext } from '../context/AuthContext';
 
 function Signup() {
+  const { currentUser } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [isEmailError, setIsEmailError] = useState(false);
   const [password, setPassword] = useState('');
@@ -37,17 +41,42 @@ function Signup() {
     return error;
   };
 
+  const createUser = async (id: string) => {
+    const data = {
+      id,
+      name: 'name',
+      email,
+      password,
+      nodes: [],
+    };
+    await setDoc(doc(db, 'users', auth.currentUser?.uid), data);
+  };
+
   const handleSubmit = async () => {
     const emailError = handleEmailValidation(email);
     const passwordError = handlePasswordValidation(password);
     if (!emailError && !passwordError) {
-      await createUserWithEmailAndPassword(auth, email, password);
+      await createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed in
+          createUser(userCredential.user.uid);
+          // Router.push('/myPage');
+          // ...
+        })
+        .catch((error) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          alert(error.code);
+          // const errorCode = error.code;
+          // const errorMessage = error.message;
+        });
     }
   };
 
   return (
     <Stack maxWidth="900px" m="0 auto" p="5">
-      <Text fontWeight="bold" size="lg">ユーザー登録</Text>
+      <Text fontWeight="bold" size="lg">
+        ユーザー登録
+      </Text>
       <form>
         <FormControl isInvalid={isEmailError}>
           <FormLabel>メールアドレス</FormLabel>

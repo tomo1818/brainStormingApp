@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Box, Input, Stack, HStack } from '@chakra-ui/react';
 import { RecursiveTree } from '../components/RecursiveTree';
 import { Node } from '../types/node';
 import { AddListType } from '../types/addListType';
 import { DeleteListType } from '../types/deleteListType';
 import { UpdateListType } from '../types/updateListType';
+import { UserContext } from '../context/UserContext';
 
 function TestPage() {
+  const user = useContext(UserContext);
+  console.log(user);
   const [list, setList] = useState<Node[]>([
     {
       id: 1,

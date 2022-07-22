@@ -12,6 +12,10 @@ import { Box,
   useBreakpointValue,
   useDisclosure } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { getAuth, signOut } from 'firebase/auth';
+import { useContext } from 'react';
+import { app } from '../libs/Firebase';
+import { AuthContext } from '../context/AuthContext';
 
 interface NavItem {
   label: string;
@@ -121,6 +125,17 @@ function DesktopNav() {
 
 export default function WithSubnavigation() {
   const { isOpen, onToggle } = useDisclosure();
+  const { currentUser } = useContext(AuthContext);
+  const auth = getAuth(app);
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+      })
+      .catch((error) => {
+        // An error happened.
+      });
+  };
 
   return (
     <Box>
@@ -176,9 +191,9 @@ export default function WithSubnavigation() {
               md: 'left',
             })}
             fontFamily="heading"
-            color={useColorModeValue('gray.800', 'white')}
+            color={useColorModeValue('green.400', 'white')}
           >
-            Logo
+            Mind Map
           </Text>
 
           <Flex
@@ -201,24 +216,39 @@ export default function WithSubnavigation() {
           direction="row"
           spacing={6}
         >
-          <Button
-            as="a"
-            fontSize="sm"
-            fontWeight={400}
-            variant="link"
-            href="/login"
-          >
-            Login
-          </Button>
-          <Button
-            as="a"
-            fontSize="sm"
-            fontWeight={400}
-            variant="link"
-            href="/signup"
-          >
-            Sign Up
-          </Button>
+          {currentUser ? (
+            <Button
+              as="a"
+              fontSize="sm"
+              fontWeight={400}
+              variant="link"
+              href="/"
+              onClick={handleSignOut}
+            >
+              Logout
+            </Button>
+          ) : (
+            <>
+              <Button
+                as="a"
+                fontSize="sm"
+                fontWeight={400}
+                variant="link"
+                href="/login"
+              >
+                Login
+              </Button>
+              <Button
+                as="a"
+                fontSize="sm"
+                fontWeight={400}
+                variant="link"
+                href="/signup"
+              >
+                Sign Up
+              </Button>
+            </>
+          )}
         </Stack>
       </Flex>
 
