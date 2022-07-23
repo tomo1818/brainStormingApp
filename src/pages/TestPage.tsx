@@ -154,6 +154,9 @@ function TestPage() {
           addList={addList}
           deleteList={deleteList}
           updateList={updateList}
+          parentLoc={{
+            x: 0, y: 0,
+          }}
         />
       </Stack>
     </div>

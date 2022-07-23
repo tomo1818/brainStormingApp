@@ -5,6 +5,8 @@ import { Node } from '../types/node';
 import { AddListType } from '../types/addListType';
 import { DeleteListType } from '../types/deleteListType';
 import { UpdateListType } from '../types/updateListType';
+import { Arrow } from './Arrow';
+import { Point } from '../types/twoPoint';
 
 type Props = {
   list: Node[];
@@ -12,9 +14,10 @@ type Props = {
   addList: AddListType;
   deleteList: DeleteListType;
   updateList: UpdateListType;
+  parentLoc: Point;
 };
 
-export function RecursiveTree({ list, rootId, addList, deleteList, updateList }: Props) {
+export function RecursiveTree({ list, rootId, addList, deleteList, updateList, parentLoc }: Props) {
   const targetList = list.filter((item) => item.parentId === rootId);
   return (
     <Stack>
@@ -22,6 +25,15 @@ export function RecursiveTree({ list, rootId, addList, deleteList, updateList }:
         {targetList.map((item) => (
           <div key={item.id}>
             <NodeUI item={item} addList={addList} deleteList={deleteList} updateList={updateList} />
+            {parentLoc.x === 0 && parentLoc.y === 0
+              ? ('') : (
+                <Arrow
+                  startPoint={parentLoc}
+                  endPoint={{
+                    x: item.x, y: item.y,
+                  }}
+                />
+              )}
             {list.find((l) => l.parentId === item.id) && (
               <RecursiveTree
                 list={list}
@@ -29,6 +41,9 @@ export function RecursiveTree({ list, rootId, addList, deleteList, updateList }:
                 addList={addList}
                 deleteList={deleteList}
                 updateList={updateList}
+                parentLoc={{
+                  x: item.x, y: item.y,
+                }}
               />
             )}
           </div>
