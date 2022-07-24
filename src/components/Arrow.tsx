@@ -22,7 +22,7 @@ export function Arrow({ startPoint, endPoint }: ArrowProps) {
       style={{
         transform: `translate(${canvasStartPoint.x}px, ${canvasStartPoint.y}px)`,
         position: 'absolute',
-        zIndex: -1,
+        zIndex: 0,
       }}
     >
       <line
