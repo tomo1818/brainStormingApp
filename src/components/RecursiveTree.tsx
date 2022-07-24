@@ -28,9 +28,11 @@ export function RecursiveTree({ list, rootId, addList, deleteList, updateList, p
             {parentLoc.x === 0 && parentLoc.y === 0
               ? ('') : (
                 <Arrow
-                  startPoint={parentLoc}
+                  startPoint={{
+                    x: parentLoc.x + 70, y: parentLoc.y + 70,
+                  }}
                   endPoint={{
-                    x: item.x, y: item.y,
+                    x: item.x + 70, y: item.y + 70,
                   }}
                 />
               )}

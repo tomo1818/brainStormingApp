@@ -86,6 +86,7 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
         color="black"
         background="blue.100"
         zIndex="1"
+        width="140px"
       >
         <div ref={NodeRef}>
           <span>{item.id}</span>
