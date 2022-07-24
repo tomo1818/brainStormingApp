@@ -128,6 +128,9 @@ function Nodes() {
             addList={addList}
             deleteList={deleteList}
             updateList={updateList}
+            parentLoc={{
+              x: 0, y: 0,
+            }}
           />
         ) : (
           <Button onClick={clickAddButton}>Create First Node</Button>
