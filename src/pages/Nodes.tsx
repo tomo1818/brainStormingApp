@@ -85,6 +85,7 @@ function Nodes() {
     parentId: number,
     x: number,
     y: number,
+    flag: ('drag'|'drop'),
   ) => {
     const copyArray = nodes.slice();
     const newArray = copyArray.map((item) => {
@@ -98,7 +99,8 @@ function Nodes() {
       }
       return item;
     });
-    updateNodes(newArray);
+    if (flag === 'drag') setNodes(newArray);
+    if (flag === 'drop') updateNodes(newArray);
   };
 
   useEffect(() => {
