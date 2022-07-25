@@ -42,11 +42,11 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
 
   // // データの更新が増えすぎるのでドロップ時に実行する方が良い
   // // ドラッグ時の移動が遅くなっていたのはこの処理が重すぎたからだと思います。
-  // // const onDrag = (e: DraggableEvent, data: DraggableData) => {
-  // //   setCurrentPosition({
-  // //     xRate: data.lastX, yRate: data.lastY,
-  // //   });
-  // // };
+  // const onDrag = (e: DraggableEvent, data: DraggableData) => {
+  //   setCurrentPosition({
+  //     xRate: data.lastX, yRate: data.lastY,
+  //   });
+  // };
 
   // ドロップ時に更新を行うことで処理を軽くする
   const onDrop = (e: DraggableEvent, data: DraggableData) => {
@@ -76,6 +76,7 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
         y: currentPosition.yRate,
       }}
       onStop={onDrop}
+      onDrag={onDrop}
     >
       <Box
         borderRadius="full"

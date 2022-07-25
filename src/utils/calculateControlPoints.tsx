@@ -20,10 +20,11 @@ export const calculateControlPoints = ({
   let startPointY = 0;
   let endPointX = absDx;
   let endPointY = absDy;
+  // endPointのほうが必ず大きくなる
   if (dx < 0) [startPointX, endPointX] = [endPointX, startPointX];
   if (dy < 0) [startPointY, endPointY] = [endPointY, startPointY];
 
-  const fixedLineInflectionConstant = 340;
+  const fixedLineInflectionConstant = dx / 2;
 
   const p1 = {
     x: startPointX,
