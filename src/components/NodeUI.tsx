@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, Editable, EditableInput, EditableTextarea, EditablePreview, IconButton } from '@chakra-ui/react';
-import { AddIcon, CloseIcon } from '@chakra-ui/icons';
+import { Box, Editable, EditableInput, EditableTextarea, EditablePreview, IconButton, Popover,
+  PopoverTrigger, Button, ButtonGroup } from '@chakra-ui/react';
 import Draggable, { DraggableEvent } from 'react-draggable';
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { Node } from '../types/node';
 import { AddListType } from '../types/addListType';
 import { DeleteListType } from '../types/deleteListType';
 import { UpdateListType } from '../types/updateListType';
+import { ColorSelector } from './ColorSelector';
 
 type Props = {
   item: Node;
@@ -28,17 +30,12 @@ type DraggableData = {
 type DraggableEventHandler = (e: Event, data: DraggableData) => void | false;
 
 export function NodeUI({ item, addList, deleteList, updateList }: Props) {
-  const clickAddButton = () => {
-    addList('addSample', '', '', item.id, item.x + 100, item.y + 100);
-  };
-  const clickDeleteButton = () => {
-    deleteList(item.id, item.parentId);
-  };
-
   const [currentPosition, setCurrentPosition] = useState<Position>({
     xRate: item.x,
     yRate: item.y,
   });
+
+  const [boxColor, setBoxColor] = useState('blue.100');
 
   // // データの更新が増えすぎるのでドロップ時に実行する方が良い
   // // ドラッグ時の移動が遅くなっていたのはこの処理が重すぎたからだと思います。
@@ -80,6 +77,13 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
 
   const NodeRef = useRef<HTMLDivElement>(null);
 
+  const clickAddButton = () => {
+    addList('addSample', '', '', item.id, item.x + 100, item.y + 100);
+  };
+  const clickDeleteButton = () => {
+    deleteList(item.id, item.parentId);
+  };
+
   return (
     <Draggable
       position={{
@@ -89,44 +93,52 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
       onStop={onDrop}
       onDrag={onDrag}
     >
+
       <Box
         borderRadius="full"
         position="absolute"
-        borderWidth="1px"
+        borderWidth="5px"
         p={0}
         m={0}
         color="black"
-        background="blue.100"
+        background={boxColor}
         zIndex="1"
         width="140px"
+        height="140px"
       >
         <div ref={NodeRef}>
           <span>{item.id}</span>
-          <span>
-            x:
-            {currentPosition.xRate}
-            y:
-            {currentPosition.yRate}
-          </span>
           {item.text}
           <Editable defaultValue="Take some chakra">
             <EditablePreview />
             <EditableInput />
           </Editable>
-          <IconButton
-            borderRadius="full"
-            aria-label="Search database"
-            icon={<AddIcon />}
-            onClick={clickAddButton}
-          />
-          <IconButton
-            borderRadius="full"
-            aria-label="Search database"
-            icon={<CloseIcon />}
-            onClick={clickDeleteButton}
-          />
+          <ButtonGroup size="sm">
+            <ColorSelector setBoxColor={setBoxColor} />
+            <IconButton
+              icon={<AddIcon />}
+              onClick={clickAddButton}
+              aria-label=""
+              height="22px"
+              width="22px"
+              padding={0}
+              minWidth="unset"
+              borderRadius={3}
+            />
+            <IconButton
+              icon={<CloseIcon />}
+              onClick={clickDeleteButton}
+              aria-label=""
+              height="22px"
+              width="22px"
+              padding={0}
+              minWidth="unset"
+              borderRadius={3}
+            />
+          </ButtonGroup>
         </div>
       </Box>
+
     </Draggable>
   );
 }
