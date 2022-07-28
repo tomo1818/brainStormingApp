@@ -7,7 +7,6 @@ import { Node } from '../types/node';
 import { AddListType } from '../types/addListType';
 import { DeleteListType } from '../types/deleteListType';
 import { UpdateListType } from '../types/updateListType';
-import { useWindowSize } from '../utils/useWindowSize';
 import { UserContext } from '../context/UserContext';
 import { db } from '../libs/Firebase';
 import Loading from '../components/Loading';
