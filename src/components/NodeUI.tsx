@@ -107,8 +107,6 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
         height="140px"
       >
         <div ref={NodeRef}>
-          <span>{item.id}</span>
-          {item.text}
           <Editable defaultValue="Take some chakra">
             <EditablePreview />
             <EditableInput />

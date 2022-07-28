@@ -7,6 +7,7 @@ import { Node } from '../types/node';
 import { AddListType } from '../types/addListType';
 import { DeleteListType } from '../types/deleteListType';
 import { UpdateListType } from '../types/updateListType';
+import { useWindowSize } from '../utils/useWindowSize';
 import { UserContext } from '../context/UserContext';
 import { db } from '../libs/Firebase';
 import Loading from '../components/Loading';
@@ -15,6 +16,9 @@ function Nodes() {
   const { user } = useContext(UserContext);
   const [nodes, setNodes] = useState<Node[]>();
   const [loading, setLoading] = useState(true);
+  const [scrollSize, setScrollSize] = useState({
+    width: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight,
+  });
   const updateNodes = async (data: Node[]) => {
     setNodes(data);
     const userDocumentRef = doc(db, 'users', user.id);
@@ -110,6 +114,12 @@ function Nodes() {
     }
   }, [user]);
 
+  useEffect(() => {
+    setScrollSize({
+      width: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight,
+    });
+  }, [nodes]);
+
   if (loading || !nodes) {
     return <Loading />;
   }
@@ -121,6 +131,8 @@ function Nodes() {
       backgroundColor="#f3fcfa"
       backgroundImage="radial-gradient(#1abc9c 1px, #f3fcfa 1px)"
       backgroundSize="20px 20px"
+      w={scrollSize.width}
+      h={scrollSize.height}
     >
       <Stack>
         {nodes.length !== 0 ? (
