@@ -6,7 +6,6 @@ import { Box, ChakraProvider } from '@chakra-ui/react';
 import reportWebVitals from './reportWebVitals';
 import Home from './pages/Home';
 import Nodes from './pages/Nodes';
-import TestPage from './pages/TestPage';
 import Signup from './pages/Signup';
 import Login from './pages/Login';
 import MyPage from './pages/MyPage';
@@ -25,7 +24,6 @@ root.render(
               <Header />
               <Routes>
                 <Route path="/" element={<Home />} />
-                <Route path="/test" element={<TestPage />} />
                 <Route path="/room" element={<Nodes />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login />} />
