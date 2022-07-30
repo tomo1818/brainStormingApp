@@ -1,6 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Box, Editable, EditableInput, EditableTextarea, EditablePreview, IconButton, Popover,
-  PopoverTrigger, Button, ButtonGroup } from '@chakra-ui/react';
+/* eslint-disable object-curly-newline */
+import React, { useState, useRef } from 'react';
+import {
+  Box,
+  ButtonGroup,
+  IconButton,
+  Input,
+} from '@chakra-ui/react';
 import Draggable, { DraggableEvent } from 'react-draggable';
 import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { Node } from '../types/node';
@@ -19,17 +24,43 @@ type Props = {
 type Position = {
   xRate: number;
   yRate: number;
-}
+};
 type DraggableData = {
-  node: HTMLElement,
-  x: number, y: number,
-  deltaX: number, deltaY: number,
-  lastX: number, lastY: number
+  node: HTMLElement;
+  x: number;
+  y: number;
+  deltaX: number;
+  deltaY: number;
+  lastX: number;
+  lastY: number;
 };
 
 type DraggableEventHandler = (e: Event, data: DraggableData) => void | false;
 
 export function NodeUI({ item, addList, deleteList, updateList }: Props) {
+  const [text, setText] = useState(item.text);
+  const changeText = (value: string) => {
+    setText(value);
+  };
+  const updateText = (node: Node) => {
+    updateList(
+      node.id,
+      text,
+      node.color,
+      node.size,
+      node.parentId,
+      node.x,
+      node.y,
+      'drop',
+    );
+  };
+  const clickAddButton = () => {
+    addList('addSample', '', '', item.id, item.x + 100, item.y + 100);
+  };
+  const clickDeleteButton = () => {
+    deleteList(item.id, item.parentId);
+  };
+
   const [currentPosition, setCurrentPosition] = useState<Position>({
     xRate: item.x,
     yRate: item.y,
@@ -38,7 +69,6 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
   const [boxColor, setBoxColor] = useState('blue.100');
 
   // // データの更新が増えすぎるのでドロップ時に実行する方が良い
-  // // ドラッグ時の移動が遅くなっていたのはこの処理が重すぎたからだと思います。
   const onDrag = (e: DraggableEvent, data: DraggableData) => {
     setCurrentPosition({
       xRate: data.x, yRate: data.y,
@@ -77,13 +107,6 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
 
   const NodeRef = useRef<HTMLDivElement>(null);
 
-  const clickAddButton = () => {
-    addList('addSample', '', '', item.id, item.x + 100, item.y + 100);
-  };
-  const clickDeleteButton = () => {
-    deleteList(item.id, item.parentId);
-  };
-
   return (
     <Draggable
       position={{
@@ -107,10 +130,12 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
         height="140px"
       >
         <div ref={NodeRef}>
-          <Editable defaultValue="Take some chakra">
-            <EditablePreview />
-            <EditableInput />
-          </Editable>
+          <Input
+            borderColor="transparent"
+            value={text}
+            onChange={(e) => changeText(e.target.value)}
+            onBlur={() => updateText(item)}
+          />
           <ButtonGroup size="sm">
             <ColorSelector setBoxColor={setBoxColor} />
             <IconButton
@@ -134,6 +159,7 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
               borderRadius={3}
             />
           </ButtonGroup>
+
         </div>
       </Box>
 
