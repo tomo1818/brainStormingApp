@@ -7,3 +7,8 @@ export type Node = {
   x :number;
   y :number;
 };
+
+export type NodesType = {
+  id: string;
+  nodes: Node[];
+};

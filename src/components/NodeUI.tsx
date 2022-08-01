@@ -15,6 +15,8 @@ import { UpdateListType } from '../types/updateListType';
 import { ColorSelector } from './ColorSelector';
 
 type Props = {
+  items: Node[];
+  nodeListId: string;
   item: Node;
   addList: AddListType;
   deleteList: DeleteListType;
@@ -37,13 +39,15 @@ type DraggableData = {
 
 type DraggableEventHandler = (e: Event, data: DraggableData) => void | false;
 
-export function NodeUI({ item, addList, deleteList, updateList }: Props) {
+export function NodeUI({ items, nodeListId, item, addList, deleteList, updateList }: Props) {
   const [text, setText] = useState(item.text);
   const changeText = (value: string) => {
     setText(value);
   };
   const updateText = (node: Node) => {
     updateList(
+      items,
+      nodeListId,
       node.id,
       text,
       node.color,
@@ -55,10 +59,10 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
     );
   };
   const clickAddButton = () => {
-    addList('addSample', '', '', item.id, item.x + 100, item.y + 100);
+    addList(nodeListId, items, 'addSample', '', '', item.id, item.x + 100, item.y + 100);
   };
   const clickDeleteButton = () => {
-    deleteList(item.id, item.parentId);
+    deleteList(items, nodeListId, item.id, item.parentId);
   };
 
   const [currentPosition, setCurrentPosition] = useState<Position>({
@@ -74,6 +78,8 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
       xRate: data.x, yRate: data.y,
     });
     updateList(
+      items,
+      nodeListId,
       item.id,
       item.text,
       item.color,
@@ -94,6 +100,8 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
     });
     // データベースでの更新
     updateList(
+      items,
+      nodeListId,
       item.id,
       item.text,
       item.color,

@@ -10,6 +10,7 @@ import { Point } from '../types/twoPoint';
 
 type Props = {
   list: Node[];
+  nodeListId: string;
   rootId: number;
   addList: AddListType;
   deleteList: DeleteListType;
@@ -17,34 +18,54 @@ type Props = {
   parentLoc: Point;
 };
 
-export function RecursiveTree({ list, rootId, addList, deleteList, updateList, parentLoc }: Props) {
+export function RecursiveTree({
+  list,
+  nodeListId,
+  rootId,
+  addList,
+  deleteList,
+  updateList,
+  parentLoc,
+}: Props) {
   const targetList = list.filter((item) => item.parentId === rootId);
   return (
     <Stack>
       <HStack>
         {targetList.map((item) => (
           <div key={item.id}>
-            <NodeUI item={item} addList={addList} deleteList={deleteList} updateList={updateList} />
-            {parentLoc.x === 0 && parentLoc.y === 0
-              ? ('') : (
-                <Arrow
-                  startPoint={{
-                    x: parentLoc.x + 70, y: parentLoc.y + 70,
-                  }}
-                  endPoint={{
-                    x: item.x + 70, y: item.y + 70,
-                  }}
-                />
-              )}
+            <NodeUI
+              items={list}
+              nodeListId={nodeListId}
+              item={item}
+              addList={addList}
+              deleteList={deleteList}
+              updateList={updateList}
+            />
+            {parentLoc.x === 0 && parentLoc.y === 0 ? (
+              ''
+            ) : (
+              <Arrow
+                startPoint={{
+                  x: parentLoc.x + 70,
+                  y: parentLoc.y + 70,
+                }}
+                endPoint={{
+                  x: item.x + 70,
+                  y: item.y + 70,
+                }}
+              />
+            )}
             {list.find((l) => l.parentId === item.id) && (
               <RecursiveTree
                 list={list}
+                nodeListId={nodeListId}
                 rootId={item.id}
                 addList={addList}
                 deleteList={deleteList}
                 updateList={updateList}
                 parentLoc={{
-                  x: item.x, y: item.y,
+                  x: item.x,
+                  y: item.y,
                 }}
               />
             )}
