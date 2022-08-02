@@ -1,9 +1,14 @@
+/* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 import React, { useContext, useState, useEffect } from 'react';
 import { Box, Button, Stack } from '@chakra-ui/react';
-import { doc, updateDoc } from '@firebase/firestore';
+import { addDoc,
+  doc,
+  setDoc,
+  updateDoc,
+  collection } from '@firebase/firestore';
 import { RecursiveTree } from '../components/RecursiveTree';
-import { Node } from '../types/node';
+import { Node, NodesType } from '../types/node';
 import { AddListType } from '../types/addListType';
 import { DeleteListType } from '../types/deleteListType';
 import { UpdateListType } from '../types/updateListType';
@@ -12,16 +17,24 @@ import { db } from '../libs/Firebase';
 import Loading from '../components/Loading';
 
 function Nodes() {
-  const { user } = useContext(UserContext);
+  const { user, nodeList } = useContext(UserContext);
   const [nodes, setNodes] = useState<Node[]>();
+  const [list, setList] = useState<NodesType[] | undefined[]>();
   const [loading, setLoading] = useState(true);
   const [scrollSize, setScrollSize] = useState({
-    width: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight,
+    width: document.documentElement.scrollWidth,
+    height: document.documentElement.scrollHeight,
   });
-  const updateNodes = async (data: Node[]) => {
-    setNodes(data);
-    const userDocumentRef = doc(db, 'users', user.id);
-    await updateDoc(userDocumentRef, {
+
+  const newUpdateNodes = async (data: Node[], id: string) => {
+    setList((prevState) => prevState.map((obj: NodesType) => (obj.id === id
+      ? {
+        id: obj.id,
+        nodes: data,
+      }
+      : obj)));
+    const nodesDocumentRef = doc(db, 'users', user.id, 'nodeList', id);
+    await updateDoc(nodesDocumentRef, {
       nodes: data,
     });
   };
@@ -37,6 +50,8 @@ function Nodes() {
   };
 
   const addList: AddListType = (
+    nodeListId: string,
+    items: Node[],
     text: string,
     color: string,
     size: string,
@@ -44,7 +59,7 @@ function Nodes() {
     x: number,
     y: number,
   ): void => {
-    const newId = findUniqueId(nodes);
+    const newId = findUniqueId(items);
     const newNodeData = {
       id: newId,
       text,
@@ -54,17 +69,18 @@ function Nodes() {
       x,
       y,
     };
-    const copyArray = nodes.slice();
+    const copyArray = items.slice();
     copyArray.push(newNodeData);
-    updateNodes(copyArray);
+    newUpdateNodes(copyArray, nodeListId);
   };
 
-  const clickAddButton = () => {
-    addList('First node', '', '', 0, 100, 100);
-  };
-
-  const deleteList: DeleteListType = (id: number, parentId: number) => {
-    const copyArray = nodes.slice();
+  const deleteList: DeleteListType = (
+    items: Node[],
+    nodeListId: string,
+    id: number,
+    parentId: number,
+  ) => {
+    const copyArray = items.slice();
     const updateArray = copyArray.map((item) => (item.parentId === id ? ({
       id: item.id,
       text: item.text,
@@ -77,10 +93,12 @@ function Nodes() {
       item
     )));
     const newArray = updateArray.filter((item) => item.id !== id);
-    updateNodes(newArray);
+    newUpdateNodes(newArray, nodeListId);
   };
 
   const updateList: UpdateListType = (
+    items: Node[],
+    nodeListId: string,
     id: number,
     text: string,
     color: string,
@@ -88,9 +106,9 @@ function Nodes() {
     parentId: number,
     x: number,
     y: number,
-    flag: ('drag'|'drop'),
+    flag: 'drag' | 'drop',
   ) => {
-    const copyArray = nodes.slice();
+    const copyArray = items.slice();
     const newArray = copyArray.map((item) => {
       if (item.id === id) {
         item.text = text;
@@ -102,20 +120,53 @@ function Nodes() {
       }
       return item;
     });
-    if (flag === 'drag') setNodes(newArray);
-    if (flag === 'drop') updateNodes(newArray);
+    if (flag === 'drag') {
+      setList((prevState) => prevState.map((obj: NodesType) => (obj.id === nodeListId
+        ? {
+          id: obj.id,
+          nodes: newArray,
+        }
+        : obj)));
+    }
+    if (flag === 'drop') newUpdateNodes(newArray, nodeListId);
+  };
+
+  const clickAddButton = async () => {
+    const data = {
+      id: '',
+      nodes: [
+        {
+          text: 'new node',
+          id: 1,
+          parentId: 0,
+          size: 'size',
+          color: 'color',
+          x: 100,
+          y: 100,
+        },
+      ],
+    };
+    const collectionRef = collection(db, 'users', user.id, 'nodeList');
+    const docRef = await addDoc(collectionRef, data);
+    await updateDoc(doc(db, 'users', user.id, 'nodeList', docRef.id), {
+      id: docRef.id,
+    });
+    data.id = docRef.id;
+    setList([...list, data]);
   };
 
   useEffect(() => {
-    if (user) {
+    if (user && nodeList) {
       setLoading(false);
       setNodes(user.nodes);
+      setList(nodeList);
     }
-  }, [user]);
+  }, [nodeList, user]);
 
   useEffect(() => {
     setScrollSize({
-      width: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight,
+      width: document.documentElement.scrollWidth,
+      height: document.documentElement.scrollHeight,
     });
   }, [nodes]);
 
@@ -131,23 +182,26 @@ function Nodes() {
       backgroundImage="radial-gradient(#1abc9c 1px, #f3fcfa 1px)"
       backgroundSize="20px 20px"
       w={scrollSize.width}
-      h={scrollSize.height}
+      // h={scrollSize.height}
     >
       <Stack>
-        {nodes.length !== 0 ? (
-          <RecursiveTree
-            list={nodes}
-            rootId={0}
-            addList={addList}
-            deleteList={deleteList}
-            updateList={updateList}
-            parentLoc={{
-              x: 0, y: 0,
-            }}
-          />
-        ) : (
-          <Button onClick={clickAddButton}>Create First Node</Button>
-        )}
+        <Button width="150px" onClick={() => clickAddButton()}>Create New Node</Button>
+        {list
+          && (list as NodesType[]).map(({ id, nodes: items }) => (
+            <RecursiveTree
+              key={id}
+              list={items}
+              nodeListId={id}
+              rootId={0}
+              addList={addList}
+              deleteList={deleteList}
+              updateList={updateList}
+              parentLoc={{
+                x: 0,
+                y: 0,
+              }}
+            />
+          ))}
       </Stack>
     </Box>
   );
