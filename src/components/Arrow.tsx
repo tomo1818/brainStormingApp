@@ -34,13 +34,14 @@ export function Arrow({ startPoint, endPoint }: ArrowProps) {
       }}
     >
       <path
-        stroke="blue"
+        stroke="#00CCFF"
         strokeWidth={5}
         fill="none"
+        strokeDasharray="10"
         d={`
           M 
             ${p1.x}, ${p1.y} 
-          C 
+          L 
             ${p2.x}, ${p2.y} 
             ${p3.x}, ${p3.y} 
             ${p4.x}, ${p4.y} 

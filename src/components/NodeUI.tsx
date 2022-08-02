@@ -1,11 +1,18 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Box, Editable, EditableInput, EditableTextarea, EditablePreview, IconButton } from '@chakra-ui/react';
-import { AddIcon, CloseIcon } from '@chakra-ui/icons';
+/* eslint-disable object-curly-newline */
+import React, { useState, useRef } from 'react';
+import {
+  Box,
+  ButtonGroup,
+  IconButton,
+  Input,
+} from '@chakra-ui/react';
 import Draggable, { DraggableEvent } from 'react-draggable';
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import { Node } from '../types/node';
 import { AddListType } from '../types/addListType';
 import { DeleteListType } from '../types/deleteListType';
 import { UpdateListType } from '../types/updateListType';
+import { ColorSelector } from './ColorSelector';
 
 type Props = {
   item: Node;
@@ -17,17 +24,36 @@ type Props = {
 type Position = {
   xRate: number;
   yRate: number;
-}
+};
 type DraggableData = {
-  node: HTMLElement,
-  x: number, y: number,
-  deltaX: number, deltaY: number,
-  lastX: number, lastY: number
+  node: HTMLElement;
+  x: number;
+  y: number;
+  deltaX: number;
+  deltaY: number;
+  lastX: number;
+  lastY: number;
 };
 
 type DraggableEventHandler = (e: Event, data: DraggableData) => void | false;
 
 export function NodeUI({ item, addList, deleteList, updateList }: Props) {
+  const [text, setText] = useState(item.text);
+  const changeText = (value: string) => {
+    setText(value);
+  };
+  const updateText = (node: Node) => {
+    updateList(
+      node.id,
+      text,
+      node.color,
+      node.size,
+      node.parentId,
+      node.x,
+      node.y,
+      'drop',
+    );
+  };
   const clickAddButton = () => {
     addList('addSample', '', '', item.id, item.x + 100, item.y + 100);
   };
@@ -40,13 +66,24 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
     yRate: item.y,
   });
 
+  const [boxColor, setBoxColor] = useState('blue.100');
+
   // // データの更新が増えすぎるのでドロップ時に実行する方が良い
-  // // ドラッグ時の移動が遅くなっていたのはこの処理が重すぎたからだと思います。
-  // // const onDrag = (e: DraggableEvent, data: DraggableData) => {
-  // //   setCurrentPosition({
-  // //     xRate: data.lastX, yRate: data.lastY,
-  // //   });
-  // // };
+  const onDrag = (e: DraggableEvent, data: DraggableData) => {
+    setCurrentPosition({
+      xRate: data.x, yRate: data.y,
+    });
+    updateList(
+      item.id,
+      item.text,
+      item.color,
+      item.size,
+      item.parentId,
+      data.x,
+      data.y,
+      'drag',
+    );
+  };
 
   // ドロップ時に更新を行うことで処理を軽くする
   const onDrop = (e: DraggableEvent, data: DraggableData) => {
@@ -64,6 +101,7 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
       item.parentId,
       data.x,
       data.y,
+      'drop',
     );
   };
 
@@ -76,45 +114,55 @@ export function NodeUI({ item, addList, deleteList, updateList }: Props) {
         y: currentPosition.yRate,
       }}
       onStop={onDrop}
+      onDrag={onDrag}
     >
+
       <Box
         borderRadius="full"
         position="absolute"
-        borderWidth="1px"
+        borderWidth="5px"
         p={0}
         m={0}
         color="black"
-        background="blue.100"
+        background={boxColor}
         zIndex="1"
         width="140px"
+        height="140px"
       >
         <div ref={NodeRef}>
-          <span>{item.id}</span>
-          <span>
-            x:
-            {currentPosition.xRate}
-            y:
-            {currentPosition.yRate}
-          </span>
-          {item.text}
-          <Editable defaultValue="Take some chakra">
-            <EditablePreview />
-            <EditableInput />
-          </Editable>
-          <IconButton
-            borderRadius="full"
-            aria-label="Search database"
-            icon={<AddIcon />}
-            onClick={clickAddButton}
+          <Input
+            borderColor="transparent"
+            value={text}
+            onChange={(e) => changeText(e.target.value)}
+            onBlur={() => updateText(item)}
           />
-          <IconButton
-            borderRadius="full"
-            aria-label="Search database"
-            icon={<CloseIcon />}
-            onClick={clickDeleteButton}
-          />
+          <ButtonGroup size="sm">
+            <ColorSelector setBoxColor={setBoxColor} />
+            <IconButton
+              icon={<AddIcon />}
+              onClick={clickAddButton}
+              aria-label=""
+              height="22px"
+              width="22px"
+              padding={0}
+              minWidth="unset"
+              borderRadius={3}
+            />
+            <IconButton
+              icon={<CloseIcon />}
+              onClick={clickDeleteButton}
+              aria-label=""
+              height="22px"
+              width="22px"
+              padding={0}
+              minWidth="unset"
+              borderRadius={3}
+            />
+          </ButtonGroup>
+
         </div>
       </Box>
+
     </Draggable>
   );
 }

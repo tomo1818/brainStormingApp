@@ -6,4 +6,5 @@ export type UpdateListType = (
   parentId: number,
   x: number,
   y: number,
+  flag: ('drag'|'drop')
 ) => void;
